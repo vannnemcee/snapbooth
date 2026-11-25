@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SnapBooth — Interactive Web Photobooth Studio</title>
+  <meta name="description" content="SnapBooth is a minimalist interactive web photobooth studio. Capture live camera photos, customize editorial photostrip templates, apply studio filters, and print high-resolution strips." />
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="site-header no-print">
+    <div class="header-inner">
+      <a href="#studio" class="brand" id="brandLogo" aria-label="SnapBooth Home">
+        <img src="assets/logo-mark.svg" alt="" class="brand-mark" width="32" height="32" />
+        <span class="brand-text">SnapBooth</span>
+        <span class="brand-tag">STUDIO</span>
+      </a>
+
+      <nav class="main-nav" aria-label="Primary Navigation">
+        <button type="button" class="nav-link is-active" data-nav="studio">Studio</button>
+        <button type="button" class="nav-link" data-nav="templates">Templates</button>
+        <button type="button" class="nav-link" data-nav="about">About</button>
+      </nav>
+
+      <div class="header-actions">
+        <button type="button" class="btn btn-primary btn-sm" id="headerStartBtn">
+          <span>Start Session</span>
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN APPLICATION -->
+  <main class="app-main no-print">
+    <!-- ==================== VIEW: STUDIO ==================== -->
+    <section id="viewStudio" class="app-view is-active" aria-label="Photobooth Studio">
+      <!-- 6-Step Progress Bar -->
+      <div class="progress-bar-wrap">
+        <ol class="stepper" id="studioStepper" aria-label="Session Progress">
+          <li class="stepper-item is-active" data-step="1">
+            <button type="button" class="stepper-btn" data-goto-step="1">
+              <span class="step-num">01</span>
+              <span class="step-label">Welcome</span>
+            </button>
+          </li>
+          <li class="stepper-item" data-step="2">
+            <button type="button" class="stepper-btn" data-goto-step="2">
+              <span class="step-num">02</span>
+              <span class="step-label">Camera Setup</span>
+            </button>
+          </li>
+          <li class="stepper-item" data-step="3">
+            <button type="button" class="stepper-btn" data-goto-step="3">
+              <span class="step-num">03</span>
+              <span class="step-label">Take Photos</span>
+            </button>
+          </li>
+          <li class="stepper-item" data-step="4">
+            <button type="button" class="stepper-btn" data-goto-step="4">
+              <span class="step-num">04</span>
+              <span class="step-label">Template</span>
+            </button>
+          </li>
+          <li class="stepper-item" data-step="5">
+            <button type="button" class="stepper-btn" data-goto-step="5">
+              <span class="step-num">05</span>
+              <span class="step-label">Edit</span>
+            </button>
+          </li>
+          <li class="stepper-item" data-step="6">
+            <button type="button" class="stepper-btn" data-goto-step="6">
+              <span class="step-num">06</span>
+              <span class="step-label">Export &amp; Print</span>
+            </button>
+          </li>
+        </ol>
+      </div>
+
+      <!-- STEP 1: WELCOME / START SESSION -->
+      <div class="studio-stage is-active" id="stageWelcome" data-stage="1">
+        <div class="welcome-grid">
+          <div class="welcome-copy">
+            <div class="eyebrow">
+              <span class="status-dot"></span>
+              <span>INTERACTIVE WEB PHOTOBOOTH</span>
+            </div>
+            <h1 class="hero-title">Studio-quality photostrips, captured right in your browser.</h1>
+            <p class="hero-subtitle">
+              Configure your camera frame, capture a sequence of shots with countdown timing, style your strip across six editorial templates, and print or export at high resolution.
+            </p>
+
+            <div class="welcome-config">
+              <span class="field-label">Select Photostrip Format</span>
+              <div class="mode-selector" role="radiogroup" aria-label="Photostrip Photo Count">
+                <button type="button" class="mode-card" data-photo-count="3" role="radio" aria-checked="false">
+                  <span class="mode-count">3 Photos</span>
+                  <span class="mode-desc">Classic trio strip</span>
+                </button>
+                <button type="button" class="mode-card is-selected" data-photo-count="4" role="radio" aria-checked="true">
+                  <span class="mode-count">4 Photos</span>
+                  <span class="mode-desc">Standard studio booth</span>
+                </button>
+                <button type="button" class="mode-card" data-photo-count="6" role="radio" aria-checked="false">
+                  <span class="mode-count">6 Photos</span>
+                  <span class="mode-desc">Contact sheet &amp; grid</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="welcome-cta-row">
+              <button type="button" class="btn btn-primary btn-lg" id="welcomeStartBtn">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/>
+                  <circle cx="12" cy="13" r="3"/>
+                </svg>
+                <span>Open Camera Studio</span>
+              </button>
+              <button type="button" class="btn btn-secondary btn-lg" id="welcomeExploreTemplatesBtn">
+                <span>Explore 6 Templates</span>
+              </button>
+            </div>
+
+            <div class="studio-specs-strip">
+              <div class="spec-item">
+                <span class="spec-key">PRIVACY</span>
+                <span class="spec-val">100% Local Browser</span>
+              </div>
+              <div class="spec-item">
+                <span class="spec-key">OUTPUT</span>
+                <span class="spec-val">300 DPI Print Ready</span>
+              </div>
+              <div class="spec-item">
+                <span class="spec-key">TEMPLATES</span>
+                <span class="spec-val">6 Editorial Layouts</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="welcome-showcase" aria-hidden="true">
+            <div class="showcase-frame">
+              <div class="showcase-top-bar">
+                <span class="mono-tag">PREVIEW // CLASSIC &amp; FILM</span>
+                <span class="mono-tag">HI-RES CANVAS</span>
+              </div>
+              <div class="showcase-canvas-pair">
+                <canvas id="heroSampleCanvasA" class="sample-strip-canvas"></canvas>
+                <canvas id="heroSampleCanvasB" class="sample-strip-canvas sample-strip-offset"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2 & STEP 3: CAMERA WORKSPACE (SETUP + CAPTURE) -->
+      <div class="studio-stage" id="stageCamera" data-stage="2-3">
+        <div class="camera-studio-layout">
+          <!-- Left / Main Column: Camera Viewfinder + Controls -->
+          <div class="camera-main-col">
+            <!-- Top Camera Control Bar -->
+            <div class="camera-toolbar">
+              <div class="toolbar-group">
+                <button type="button" class="btn btn-ghost btn-sm" id="cameraBackBtn" title="Previous Step">
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="m15 18-6-6 6-6"/>
+                  </svg>
+                  <span>Back</span>
+                </button>
+                <div class="toolbar-divider"></div>
+                <span class="camera-status-badge" id="cameraStatusBadge">
+                  <span class="status-indicator" id="cameraStatusDot"></span>
+                  <span id="cameraStatusText">Camera Standby</span>
+                </span>
+              </div>
+
+              <div class="toolbar-group toolbar-controls-wrap">
+                <!-- Strip Photo Count -->
+                <div class="control-pill-group" role="group" aria-label="Strip Photo Count">
+                  <span class="pill-group-label">Strip</span>
+                  <button type="button" class="pill-btn" data-strip-count="3">3</button>
+                  <button type="button" class="pill-btn is-active" data-strip-count="4">4</button>
+                  <button type="button" class="pill-btn" data-strip-count="6">6</button>
+                </div>
+
+                <!-- Aspect Ratio -->
+                <div class="control-pill-group" role="group" aria-label="Camera Aspect Ratio">
+                  <span class="pill-group-label">Ratio</span>
+                  <button type="button" class="pill-btn is-active" data-ratio="4:3">4:3</button>
+                  <button type="button" class="pill-btn" data-ratio="1:1">1:1</button>
+                  <button type="button" class="pill-btn" data-ratio="3:2">3:2</button>
+                  <button type="button" class="pill-btn" data-ratio="16:9">16:9</button>
+                </div>
+
+                <!-- Timer -->
+                <div class="control-pill-group" role="group" aria-label="Countdown Timer">
+                  <span class="pill-group-label">Timer</span>
+                  <button type="button" class="pill-btn" data-timer="0">Off</button>
+                  <button type="button" class="pill-btn is-active" data-timer="3">3s</button>
+                  <button type="button" class="pill-btn" data-timer="5">5s</button>
+                  <button type="button" class="pill-btn" data-timer="10">10s</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Viewfinder Frame -->
+            <div class="viewfinder-shell" id="viewfinderShell">
+              <div class="viewfinder-stage" id="viewfinderStage" data-aspect="4:3">
+                <!-- Live Video Element -->
+                <video id="cameraVideo" class="camera-video is-mirrored" autoplay playsinline muted></video>
+
+                <!-- Subtle Rule-of-Thirds Composition Grid -->
+                <div class="composition-grid" id="compositionGrid" aria-hidden="true">
+                  <span class="grid-line grid-v1"></span>
+                  <span class="grid-line grid-v2"></span>
+                  <span class="grid-line grid-h1"></span>
+                  <span class="grid-line grid-h2"></span>
+                </div>
+
+                <!-- Viewfinder Corner Brackets & HUD -->
+                <div class="viewfinder-hud" id="viewfinderHud" aria-hidden="true">
+                  <span class="hud-corner tl"></span>
+                  <span class="hud-corner tr"></span>
+                  <span class="hud-corner bl"></span>
+                  <span class="hud-corner br"></span>
+                  <div class="hud-top-meta">
+                    <span id="hudRatioLabel">4:3 FRAME</span>
+                    <span id="hudRetakeBanner" class="hud-retake-pill" hidden>RETAKING PHOTO #1</span>
+                    <span id="hudShotCounter">0 / 4 CAPTURED</span>
+                  </div>
+                </div>
+
+                <!-- Countdown Overlay -->
+                <div class="countdown-overlay" id="countdownOverlay" hidden aria-live="assertive">
+                  <span class="countdown-number" id="countdownNumber">3</span>
+                  <span class="countdown-sub" id="countdownSub">Get ready...</span>
+                </div>
+
+                <!-- White Shutter Flash Overlay -->
+                <div class="flash-overlay" id="flashOverlay" aria-hidden="true"></div>
+
+                <!-- Elegant Placeholder when Camera is Inactive -->
+                <div class="camera-placeholder" id="cameraPlaceholder">
+                  <div class="placeholder-inner">
+                    <div class="placeholder-icon-ring">
+                      <svg class="icon-xl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/>
+                        <circle cx="12" cy="13" r="3.5"/>
+                      </svg>
+                    </div>
+                    <h2 class="placeholder-title" id="placeholderTitle">Camera Studio Standby</h2>
+                    <p class="placeholder-desc" id="placeholderDesc">
+                      Enable camera access to preview your frame in real time. All photos stay private in your browser and are never uploaded.
+                    </p>
+                    <div class="placeholder-actions">
+                      <button type="button" class="btn btn-primary btn-lg" id="enableCameraBtn">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <polygon points="5 3 19 12 5 21 5 3"/>
+                        </svg>
+                        <span>Enable Camera</span>
+                      </button>
+                      <label class="btn btn-secondary btn-sm fallback-upload-label" id="fallbackUploadLabel" hidden>
+                        <input type="file" id="fallbackFileInput" accept="image/*" multiple hidden />
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                        </svg>
+                        <span>Import Photos Instead</span>
+                      </label>
+                    </div>
+                    <p class="camera-error-msg" id="cameraErrorMsg" role="alert" hidden></p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Bottom Shutter & Camera Action Dock -->
+              <div class="shutter-dock">
+                <div class="dock-left">
+                  <button type="button" class="btn btn-secondary btn-sm" id="toggleCameraPowerBtn" title="Start or Stop Camera">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/>
+                    </svg>
+                    <span id="toggleCameraPowerText">Start Camera</span>
+                  </button>
+
+                  <button type="button" class="btn btn-ghost btn-sm" id="switchCameraBtn" title="Switch Front / Back Camera">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/>
+                      <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/>
+                    </svg>
+                    <span>Switch Camera</span>
+                  </button>
+
+                  <button type="button" class="btn btn-ghost btn-sm is-toggled" id="mirrorToggleBtn" title="Mirror Preview & Capture" aria-pressed="true">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M12 3v18"/><path d="m8 7-5 5 5 5"/><path d="m16 7 5 5-5 5"/>
+                    </svg>
+                    <span>Mirror</span>
+                  </button>
+                </div>
+
+                <div class="dock-center">
+                  <button type="button" class="shutter-btn" id="takePhotoBtn" disabled aria-label="Take Photo">
+                    <span class="shutter-outer">
+                      <span class="shutter-inner"></span>
+                    </span>
+                    <span class="shutter-caption" id="shutterCaption">Take Photo</span>
+                  </button>
+                </div>
+
+                <div class="dock-right">
+                  <button type="button" class="btn btn-ghost btn-sm" id="autoSequenceBtn" title="Auto-shoot full strip sequence" aria-pressed="false">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+                      <rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>
+                    </svg>
+                    <span id="autoSequenceLabel">Single Shot</span>
+                  </button>
+
+                  <button type="button" class="btn btn-ghost btn-sm is-toggled" id="gridToggleBtn" title="Toggle Composition Grid" aria-pressed="true">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/><path d="M15 3v18"/>
+                    </svg>
+                    <span>Grid</span>
+                  </button>
+
+                  <button type="button" class="btn btn-ghost btn-sm" id="fullscreenBtn" title="Toggle Fullscreen">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/>
+                      <path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/>
+                    </svg>
+                    <span>Fullscreen</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Captured Session Tray -->
+          <aside class="session-tray-panel" aria-label="Captured Photos">
+            <div class="tray-header">
+              <div>
+                <h3 class="tray-title">Session Roll</h3>
+                <p class="tray-subtitle" id="trayProgressText">0 of 4 frames captured</p>
+              </div>
+              <button type="button" class="btn btn-ghost btn-xs" id="clearPhotosBtn" hidden>Reset Roll</button>
+            </div>
+
+            <!-- Device Picker (shown when multiple cameras detected) -->
+            <div class="device-select-row" id="deviceSelectRow" hidden>
+              <label for="cameraDeviceSelect" class="field-label-xs">Camera Input</label>
+              <select id="cameraDeviceSelect" class="studio-select"></select>
+            </div>
+
+            <!-- Dynamic Slot List -->
+            <div class="photo-slots-grid" id="photoSlotsGrid">
+              <!-- Populated dynamically by script.js -->
+            </div>
+
+            <div class="tray-footer">
+              <button type="button" class="btn btn-primary btn-block" id="toTemplatesBtn" disabled>
+                <span>Choose Template</span>
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                </svg>
+              </button>
+              <p class="tray-hint" id="trayHintText">Capture all frames to unlock templates &amp; editing.</p>
+            </div>
+          </aside>
+        </div>
+      </div>
+
+      <!-- STEP 4: CHOOSE TEMPLATE -->
+      <div class="studio-stage" id="stageTemplates" data-stage="4">
+        <div class="stage-header-bar">
+          <div>
+            <span class="eyebrow-sm">STEP 04 — LAYOUT CURATION</span>
+            <h2 class="stage-heading">Choose Photostrip Template</h2>
+          </div>
+          <div class="stage-header-actions">
+            <button type="button" class="btn btn-secondary" id="templateBackToCameraBtn">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="m15 18-6-6 6-6"/>
+              </svg>
+              <span>Back to Camera</span>
+            </button>
+            <button type="button" class="btn btn-primary" id="templateToEditorBtn">
+              <span>Customize &amp; Edit</span>
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="template-selection-layout">
+          <div class="template-live-stage">
+            <div class="canvas-preview-frame">
+              <canvas id="templateStageCanvas" class="strip-render-canvas"></canvas>
+            </div>
+            <div class="preview-caption-bar">
+              <span id="templateStageName" class="mono-tag">CLASSIC STRIP</span>
+              <span id="templateStageSpec" class="mono-tag">VERTICAL BOOTH LAYOUT</span>
+            </div>
+          </div>
+
+          <div class="template-cards-column">
+            <p class="section-helper">Click a template to apply its layout, spacing, border system, and typography directly to your photos.</p>
+            <div class="template-cards-grid" id="stepTemplateGrid">
+              <!-- Populated dynamically with real canvas miniature previews -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 5: PHOTO EDITOR -->
+      <div class="studio-stage" id="stageEditor" data-stage="5">
+        <div class="stage-header-bar">
+          <div>
+            <span class="eyebrow-sm">STEP 05 — DARKROOM &amp; STYLING</span>
+            <h2 class="stage-heading">Edit Photostrip</h2>
+          </div>
+          <div class="stage-header-actions">
+            <button type="button" class="btn btn-secondary" id="editorBackBtn">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="m15 18-6-6 6-6"/>
+              </svg>
+              <span>Back to Templates</span>
+            </button>
+            <button type="button" class="btn btn-primary" id="editorToExportBtn">
+              <span>Final Result &amp; Print</span>
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="editor-layout">
+          <!-- Live High-Res Preview -->
+          <div class="editor-preview-pane">
+            <div class="canvas-preview-frame">
+              <canvas id="editorCanvas" class="strip-render-canvas"></canvas>
+            </div>
+            <div class="preview-caption-bar">
+              <span class="mono-tag" id="editorResolutionLabel">HIGH-RES RENDER</span>
+              <span class="mono-tag">LIVE PREVIEW</span>
+            </div>
+          </div>
+
+          <!-- Controls Panel -->
+          <div class="editor-controls-pane">
+            <!-- Quick Template Switcher -->
+            <div class="editor-block">
+              <div class="editor-block-head">
+                <span class="field-label">Template Layout</span>
+              </div>
+              <div class="editor-template-pills" id="editorTemplatePills">
+                <!-- Populated dynamically -->
+              </div>
+            </div>
+
+            <!-- Color Filter Presets -->
+            <div class="editor-block">
+              <div class="editor-block-head">
+                <span class="field-label">Color Grade / Filter</span>
+              </div>
+              <div class="filter-pills-row" id="filterPillsRow" role="radiogroup" aria-label="Photo Filter">
+                <button type="button" class="filter-chip is-active" data-filter="normal">Normal</button>
+                <button type="button" class="filter-chip" data-filter="grayscale">Grayscale</button>
+                <button type="button" class="filter-chip" data-filter="vintage">Vintage</button>
+                <button type="button" class="filter-chip" data-filter="warm">Warm</button>
+                <button type="button" class="filter-chip" data-filter="cool">Cool</button>
+              </div>
+            </div>
+
+            <!-- Tone Adjustments -->
+            <div class="editor-block">
+              <div class="editor-block-head">
+                <span class="field-label">Tone &amp; Exposure</span>
+              </div>
+              <div class="sliders-stack">
+                <div class="slider-row">
+                  <div class="slider-label-line">
+                    <label for="brightnessSlider">Brightness</label>
+                    <span class="mono-val" id="brightnessVal">0</span>
+                  </div>
+                  <input type="range" id="brightnessSlider" min="-50" max="50" step="1" value="0" />
+                </div>
+
+                <div class="slider-row">
+                  <div class="slider-label-line">
+                    <label for="contrastSlider">Contrast</label>
+                    <span class="mono-val" id="contrastVal">0</span>
+                  </div>
+                  <input type="range" id="contrastSlider" min="-50" max="50" step="1" value="0" />
+                </div>
+
+                <div class="slider-row">
+                  <div class="slider-label-line">
+                    <label for="saturationSlider">Saturation</label>
+                    <span class="mono-val" id="saturationVal">0</span>
+                  </div>
+                  <input type="range" id="saturationSlider" min="-100" max="100" step="1" value="0" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Frame Background Color -->
+            <div class="editor-block">
+              <div class="editor-block-head">
+                <span class="field-label">Frame Background</span>
+                <button type="button" class="text-link-btn" id="resetBgColorBtn">Use Template Default</button>
+              </div>
+              <div class="bg-swatches-row" id="bgSwatchesRow">
+                <button type="button" class="color-swatch" data-bg="#FFFFFF" style="background:#FFFFFF" title="Pure White" aria-label="Pure White"></button>
+                <button type="button" class="color-swatch" data-bg="#F6F2EA" style="background:#F6F2EA" title="Studio Cream" aria-label="Studio Cream"></button>
+                <button type="button" class="color-swatch" data-bg="#141413" style="background:#141413" title="Obsidian Black" aria-label="Obsidian Black"></button>
+                <button type="button" class="color-swatch" data-bg="#FBEAE7" style="background:#FBEAE7" title="Soft Blush" aria-label="Soft Blush"></button>
+                <button type="button" class="color-swatch" data-bg="#E8F0EA" style="background:#E8F0EA" title="Pastel Sage" aria-label="Pastel Sage"></button>
+                <button type="button" class="color-swatch" data-bg="#EAEAF6" style="background:#EAEAF6" title="Mist Lavender" aria-label="Mist Lavender"></button>
+                <button type="button" class="color-swatch" data-bg="#EA580C" style="background:#EA580C" title="Studio Coral" aria-label="Studio Coral"></button>
+                <label class="custom-color-picker" title="Custom Color">
+                  <input type="color" id="customBgPicker" value="#FFFFFF" aria-label="Custom Frame Color" />
+                  <span class="picker-icon">+</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Title & Date Text -->
+            <div class="editor-block">
+              <div class="editor-block-head">
+                <span class="field-label">Caption &amp; Date Stamp</span>
+              </div>
+              <div class="form-grid-two">
+                <div class="input-field">
+                  <label for="stripTitleInput" class="field-label-xs">Title / Event Name</label>
+                  <input type="text" id="stripTitleInput" class="studio-input" maxlength="36" placeholder="SNAPBOOTH" />
+                </div>
+                <div class="input-field">
+                  <label for="stripDateInput" class="field-label-xs">Date Text</label>
+                  <input type="text" id="stripDateInput" class="studio-input" maxlength="28" placeholder="2026.11.25" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Reset All Edits -->
+            <div class="editor-actions-footer">
+              <button type="button" class="btn btn-secondary btn-block" id="resetEditsBtn">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>
+                </svg>
+                <span>Reset Edit</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 6: FINAL RESULT & EXPORT -->
+      <div class="studio-stage" id="stageExport" data-stage="6">
+        <div class="export-layout">
+          <div class="export-showcase-pane">
+            <div class="canvas-preview-frame canvas-preview-large">
+              <canvas id="finalCanvas" class="strip-render-canvas"></canvas>
+            </div>
+          </div>
+
+          <div class="export-details-pane">
+            <span class="eyebrow-sm">STEP 06 — STUDIO MASTER READY</span>
+            <h2 class="export-title">Your Photostrip is Ready</h2>
+            <p class="export-desc">
+              Rendered at high resolution on HTML5 Canvas. Download a lossless master file for sharing or print directly with proportional studio scaling.
+            </p>
+
+            <div class="export-meta-box">
+              <div class="meta-row">
+                <span class="meta-k">Template</span>
+                <span class="meta-v" id="exportMetaTemplate">Classic Strip</span>
+              </div>
+              <div class="meta-row">
+                <span class="meta-k">Frames</span>
+                <span class="meta-v" id="exportMetaFrames">4 Photos</span>
+              </div>
+              <div class="meta-row">
+                <span class="meta-k">Dimensions</span>
+                <span class="meta-v" id="exportMetaDimensions">1200 × 3600 px</span>
+              </div>
+              <div class="meta-row">
+                <span class="meta-k">Color Grade</span>
+                <span class="meta-v" id="exportMetaFilter">Normal</span>
+              </div>
+            </div>
+
+            <div class="export-primary-buttons">
+              <button type="button" class="btn btn-primary btn-lg btn-block" id="downloadPngBtn">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                <span>Download PNG (Lossless)</span>
+              </button>
+
+              <button type="button" class="btn btn-secondary btn-lg btn-block" id="downloadJpgBtn">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+                </svg>
+                <span>Download JPG</span>
+              </button>
+
+              <button type="button" class="btn btn-dark btn-lg btn-block" id="printStripBtn">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <polyline points="6 9 6 2 18 2 18 9"/>
+                  <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+                  <rect width="12" height="8" x="6" y="14"/>
+                </svg>
+                <span>Print Photostrip</span>
+              </button>
+            </div>
+
+            <div class="export-secondary-buttons">
+              <button type="button" class="btn btn-ghost" id="backToEditorBtn">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="m15 18-6-6 6-6"/>
+                </svg>
+                <span>Back to Editor</span>
+              </button>
+              <button type="button" class="btn btn-ghost text-danger" id="startNewSessionBtn">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>
+                </svg>
+                <span>Start New Session</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW: TEMPLATES GALLERY ==================== -->
+    <section id="viewTemplates" class="app-view" aria-label="Template Collection">
+      <div class="catalog-header">
+        <div>
+          <span class="eyebrow-sm">CURATED LAYOUT SYSTEM</span>
+          <h1 class="section-title">Photostrip Templates</h1>
+          <p class="section-lead">
+            Six architectural layouts built on Canvas. Every template dynamically adapts to 3, 4, or 6 photos with custom borders, decorative marks, and live typography.
+          </p>
+        </div>
+        <div class="catalog-filter-bar">
+          <span class="field-label-xs">Preview Format:</span>
+          <div class="control-pill-group" id="galleryCountGroup">
+            <button type="button" class="pill-btn" data-gallery-count="3">3 Photos</button>
+            <button type="button" class="pill-btn is-active" data-gallery-count="4">4 Photos</button>
+            <button type="button" class="pill-btn" data-gallery-count="6">6 Photos</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="catalog-grid" id="catalogTemplatesGrid">
+        <!-- Populated dynamically with live-rendered template canvases -->
+      </div>
+    </section>
+
+    <!-- ==================== VIEW: ABOUT ==================== -->
+    <section id="viewAbout" class="app-view" aria-label="About SnapBooth">
+      <div class="about-container">
+        <div class="about-hero">
+          <span class="eyebrow-sm">ABOUT SNAPBOOTH</span>
+          <h1 class="section-title">Designed like a modern photography studio, powered purely by web standards.</h1>
+          <p class="section-lead">
+            SnapBooth brings the tactile charm of physical analog photobooths to any browser—without servers, external uploads, or tracking. Every frame is captured and composited locally on your device.
+          </p>
+        </div>
+
+        <div class="about-grid">
+          <article class="about-item">
+            <span class="about-num">01</span>
+            <h3>Direct MediaDevices Capture</h3>
+            <p>Connects directly to front, rear, or external USB cameras with real-time aspect ratio framing, mirror calibration, and precision countdown timers.</p>
+          </article>
+          <article class="about-item">
+            <span class="about-num">02</span>
+            <h3>6 Bespoke Canvas Layouts</h3>
+            <p>From 35mm perforated film stock and obsidian darkroom contact sheets to editorial cream grids and commemorative event posters.</p>
+          </article>
+          <article class="about-item">
+            <span class="about-num">03</span>
+            <h3>Non-Destructive Darkroom</h3>
+            <p>Adjust brightness, contrast, saturation, color grade presets, frame stock colors, titles, and date stamps with instant live preview.</p>
+          </article>
+          <article class="about-item">
+            <span class="about-num">04</span>
+            <h3>Print-Calibrated Output</h3>
+            <p>Dedicated print stylesheet isolates your high-resolution photostrip and scales it proportionally on paper with zero UI chrome or cropping.</p>
+          </article>
+        </div>
+
+        <div class="about-cta-bar">
+          <div>
+            <h3>Ready to step into the booth?</h3>
+            <p>Start a 3, 4, or 6-frame session in seconds.</p>
+          </div>
+          <button type="button" class="btn btn-primary btn-lg" id="aboutStartBtn">Launch Camera Studio</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer no-print">
+    <div class="footer-inner">
+      <span class="footer-copy">SnapBooth Studio — Local In-Browser Photobooth System</span>
+      <span class="footer-shortcut">Tip: Press <kbd>Space</kbd> in Camera Studio to trigger shutter</span>
+    </div>
+  </footer>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast-container no-print" id="toastContainer" aria-live="polite"></div>
+
+  <!-- CONFIRMATION MODAL (for Start New Session / Reset Roll) -->
+  <div class="modal-backdrop no-print" id="confirmModal" hidden>
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="confirmModalTitle">
+      <h3 class="modal-title" id="confirmModalTitle">Start a new session?</h3>
+      <p class="modal-body" id="confirmModalBody">Your current captured photos and edits will be cleared so you can start fresh.</p>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" id="confirmCancelBtn">Cancel</button>
+        <button type="button" class="btn btn-primary" id="confirmAcceptBtn">Start Fresh</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRINT-ONLY OUTPUT STAGE -->
+  <div id="printStage" class="print-only" aria-hidden="true">
+    <img id="printableStripImage" alt="SnapBooth Photostrip Print" />
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
